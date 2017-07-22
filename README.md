@@ -11,3 +11,5 @@ http://executeautomation.com/blog/data-driven-testing-in-selenium-with-c/
 2. Part 2 
     https://www.youtube.com/watch?v=tEBAEnYyAJs
 
+## Advanced framework development with C# course
+https://www.udemy.com/framework-development-with-selenium-csharp-advanced/
