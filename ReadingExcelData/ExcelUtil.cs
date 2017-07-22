@@ -1,9 +1,9 @@
-﻿using Excel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using ExcelDataReader;
 
 namespace ReadingExcelData
 {
@@ -17,24 +17,51 @@ namespace ReadingExcelData
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
+        //public static DataTable ExcelToDataTable(string fileName)
+        //{
+        //    //open file and returns as Stream
+        //    FileStream stream = File.Open(fileName, FileMode.Open, FileAccess.Read);
+        //    //Createopenxmlreader via ExcelReaderFactory
+        //    IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream); //.xlsx 
+        //    //Set the First Row as Column Name
+        //    excelReader.IsFirstRowAsColumnNames = true;
+        //    //Return as DataSet
+        //    DataSet result = excelReader.AsDataSet();
+        //    //Get all the Tables
+        //    DataTableCollection table = result.Tables;
+        //    //Store it in DataTable
+        //    DataTable resultTable = table["Sheet1"];
+
+        //    //return
+        //    return resultTable;
+        //}
+
         public static DataTable ExcelToDataTable(string fileName)
         {
-            //open file and returns as Stream
-            FileStream stream = File.Open(fileName, FileMode.Open, FileAccess.Read);
-            //Createopenxmlreader via ExcelReaderFactory
-            IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream); //.xlsx 
-            //Set the First Row as Column Name
-            excelReader.IsFirstRowAsColumnNames = true;
-            //Return as DataSet
-            DataSet result = excelReader.AsDataSet();
-            //Get all the Tables
-            DataTableCollection table = result.Tables;
-            //Store it in DataTable
-            DataTable resultTable = table["Sheet1"];
+            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (data) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
 
-            //return
-            return resultTable;
+                    //Get all the Tables
+                    DataTableCollection table = result.Tables;
+                    //Store it in DataTable
+                    DataTable resultTable = table["Sheet1"];
+                    //return
+                    return resultTable;
+                }
+            }
         }
+
+
+
 
 
         /// <summary>
